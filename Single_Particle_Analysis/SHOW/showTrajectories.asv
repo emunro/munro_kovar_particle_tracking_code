@@ -1,0 +1,23 @@
+function [ ] = showTrajectories(in,trks, firstT, lastT, lineWidth)
+
+
+
+    nTrks = length(trks);
+    xaxis = size(in,1);
+    yaxis = size(in,2);
+
+    fig = figure;
+    fig.InnerPosition = [100 100 xaxis yaxis];
+    axes('Position',[0 0 1 1]);
+
+    hold on;
+    for iTrk = 1:nTrks
+        if (firstT <= trks(iTrk).first && lastT >= trks(iTrk).last)
+%             ft = max(firstT,trks(iTrk).first) - trks(iTrk).first + 1;
+%             lt = min(lastT,trks(iTrk).last) - trks(iTrk).first + 1;
+%             plot(trks(iTrk).x(ft:lt),trks(iTrk).y(ft:lt),'g','LineWidth',lineWidth); % split
+            plot(trks(iTrk).x(1:10),trks(iTrk).y(1:10),'g','LineWidth',lineWidth); % split
+        end
+    end
+end
+
