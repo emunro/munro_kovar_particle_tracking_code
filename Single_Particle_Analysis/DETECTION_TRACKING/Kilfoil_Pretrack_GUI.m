@@ -208,9 +208,10 @@ function FeatSizeEdit_Callback(hObject, eventdata, handles)
 % hObject    handle to FeatSizeEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+currstring = get(hObject, 'String');
+currval = str2double(currstring);
+set(handles.FeatSizeSlider,'Value',currval);
 
-% Hints: get(hObject,'String') returns contents of FeatSizeEdit as text
-%        str2double(get(hObject,'String')) returns contents of FeatSizeEdit as a double
 
 
 % --- Executes during object creation, after setting all properties.
@@ -257,9 +258,10 @@ function IntIntensityEdit_Callback(hObject, eventdata, handles)
 % hObject    handle to IntIntensityEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+currstring = get(hObject, 'String');
+currval = str2double(currstring);
+set(handles.IntIntensitySlider,'Value',currval);
 
-% Hints: get(hObject,'String') returns contents of IntIntensityEdit as text
-%        str2double(get(hObject,'String')) returns contents of IntIntensityEdit as a double
 
 
 % --- Executes during object creation, after setting all properties.
@@ -306,9 +308,10 @@ function RgEdit_Callback(hObject, eventdata, handles)
 % hObject    handle to RgEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+currstring = get(hObject, 'String');
+currval = str2double(currstring);
+set(handles.RgSlider,'Value',currval);
 
-% Hints: get(hObject,'String') returns contents of RgEdit as text
-%        str2double(get(hObject,'String')) returns contents of RgEdit as a double
 
 
 % --- Executes during object creation, after setting all properties.
@@ -357,9 +360,10 @@ function EccEdit_Callback(hObject, eventdata, handles)
 % hObject    handle to EccEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+currstring = get(hObject, 'String');
+currval = str2double(currstring);
+set(handles.EccSlider,'Value',currval);
 
-% Hints: get(hObject,'String') returns contents of EccEdit as text
-%        str2double(get(hObject,'String')) returns contents of EccEdit as a double
 
 
 % --- Executes during object creation, after setting all properties.
@@ -406,9 +410,10 @@ function MasscutEdit_Callback(hObject, eventdata, handles)
 % hObject    handle to MasscutEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+currstring = get(hObject, 'String');
+currval = str2double(currstring);
+set(handles.MasscutSlider,'Value',currval);
 
-% Hints: get(hObject,'String') returns contents of MasscutEdit as text
-%        str2double(get(hObject,'String')) returns contents of MasscutEdit as a double
 
 
 % --- Executes during object creation, after setting all properties.
@@ -465,6 +470,16 @@ function FrameEdit_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of FrameEdit as text
 %        str2double(get(hObject,'String')) returns contents of FrameEdit as a double
+currstring = get(hObject, 'String');
+currval = str2double(currstring);
+set(handles.FrameSlider,'Value',currval);
+
+% Load the new image
+tifName = 'e.tif';
+handles.im = imread(tifName,currval);
+guidata(hObject,handles);
+% update_features(hObject,handles);
+
 
 
 % --- Executes during object creation, after setting all properties.
