@@ -2,12 +2,12 @@ clear all;
 workingDir = pwd;
 
 %%%%%%%%%%%%  particle detection parameters  %%%%%%%%%%%%%%%%%%%
-    info.frameRate = 10;                  % acquisition frame rate
-    info.pixelSize = 0.10;               % original pixel size
+    info.frameRate = .666667;                  % acquisition frame rate
+    info.pixelSize = 0.107;               % original pixel size
 
 %%%%%%%%%%%%  particle detection parameters  %%%%%%%%%%%%%%%%%%%
-    minPeakIntensity = 300
-    minIntegratedIntensity = 3600;
+    minPeakIntensity = 1234;
+    minIntegratedIntensity = 30000;
     featureSize = 3; 
     haloSize = 1;
 
@@ -19,8 +19,8 @@ workingDir = pwd;
 
 %%%%%%%%%%%%  define segments of image sequence to track  %%%%%%%%%%%%%%%%%%%
     info.firstFrame = 1;                         % first frame of sequence to analyse
-    info.lastFrame = 800;                       % last frame of sequence to analyse
-    info.numFramesInTrackedInterval = 800;       % Break sequence into smaller chunks to increase efficiency
+    info.lastFrame = 500;                       % last frame of sequence to analyse
+    info.numFramesInTrackedInterval = 500;       % Break sequence into smaller chunks to increase efficiency
 
 %%%%%%%%%%%%  parameters for ScriptTrackGeneral %%%%%%%%%%%%%%%%%%%    
     defineScriptTrackGeneralParameters = 1;  
@@ -31,7 +31,7 @@ workingDir = pwd;
     if defineScriptTrackGeneralParameters == 1    
         info.gapClosingTimeWindow = gapClosingTimeWindow;       
         info.gapClosingMergeSplit = gapClosingMergeSplit; 
-        info.includeCompoundTracks = includeCompoundTracks;              .
+        info.includeCompoundTracks = includeCompoundTracks;              
     end  
 
 %%%%%%%%%%%  specify a range of values to sample for some parameter  %%%%%%%%%%%
@@ -49,7 +49,7 @@ workingDir = pwd;
     trks = cell(numEmbryos,numParameterVals);
 
     for i = 1:numEmbryos  
-        dirName = [workingDir '/' dirList{i} '/']
+        dirName = [workingDir '/' dirList{i} '/'];
         tifName = [dirName 'e.tif'];
 
         % read in data and compute total number of frames to analyse
