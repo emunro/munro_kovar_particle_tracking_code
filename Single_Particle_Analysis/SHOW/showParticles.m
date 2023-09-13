@@ -1,4 +1,4 @@
-function [ ] = showParticles(tifname,trks, markerSize, labelParticles, outputfilename)
+function [ ] = showParticles(tifname,trks, markerSize, labelParticles, outputfilename, compress)
 %   Draws tracked particles as colored circles onto the original image sequence from which the trajectories 
 %   were derived. It is assumed that neither the image sequence, nor the trajectories
 %   have been transformed in any way (e.g. rotated and translated).
@@ -15,10 +15,13 @@ function [ ] = showParticles(tifname,trks, markerSize, labelParticles, outputfil
 %       labelParticles:  if 1, add text numbers next to each particle
 
 %       outputfilename:  the name of the outputfile
-%
+
+%       compress: if 1, output will be an mp4, if 0, output will be an 
+%       uncompressed AVI file which looks clearer and can be opened in FIJI
+
 %   Output:
 %
-%   a quicktime movie called particles.mp4
+%   a quicktime movie called particles.mp4 (or .avi)
 %   in which particles are drawn as colored circles over the original data.
 %   The color of the circle indicates the status of the trajectory:
 %
@@ -46,7 +49,12 @@ function [ ] = showParticles(tifname,trks, markerSize, labelParticles, outputfil
     axes('Position',[0 0 1 1]);
 
     % create the video writer with 30 fps
-    writerObj = VideoWriter(outputfilename,'MPEG-4');
+    if compress == 0
+        file_type = 'Uncompressed AVI';
+    else
+        file_type = 'MPEG-4';
+    end
+    writerObj = VideoWriter(outputfilename, file_type);
     writerObj.FrameRate = 30;
 
     % open the video writer
