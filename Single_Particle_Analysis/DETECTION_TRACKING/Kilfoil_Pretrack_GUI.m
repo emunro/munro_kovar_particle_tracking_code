@@ -101,7 +101,7 @@ end
 maxint = double(max(max(im)));
 maxsz = max(size(im));
 maxfeatsize = floor(0.1*maxsz);
-maxintInt = floor(((maxfeatsize/4)^2)*maxint);
+maxintInt = floor((maxfeatsize/4)*maxint);
 maxRg = maxfeatsize;
 minfeatstep = 1/(maxfeatsize-1);
 maxfeatstep = 5/(maxfeatsize-1);
