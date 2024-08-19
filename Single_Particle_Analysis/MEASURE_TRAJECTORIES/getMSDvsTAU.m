@@ -18,7 +18,7 @@ function msd = getMSDvsTAU(trk,maxTau,movieInfo)
 % movieInfo         =   a struct containing the following fields:
 %     
 %     frameRate:      in #/sec
-%     pixelSize:      in µm
+%     pixelSize:      in Âµm
 % 
 % Output
 

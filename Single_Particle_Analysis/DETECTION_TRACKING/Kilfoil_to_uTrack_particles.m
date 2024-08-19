@@ -1,13 +1,11 @@
-function [ out ] = Kilfoil_to_uTrack_particles(particles, nFrames)
+function [ out ] = Kilfoil_to_uTrack_particles(features)
 %Kilfoil_to_uTrack_particles Transforms a set of particle data produced by Kilfoil
-%preTråck into format for tracking by uTrack.  Extracts a subset of data defined 
+%preTrÃ¥ck into format for tracking by uTrack.  Extracts a subset of data defined 
 % by firstfarme and nrames.
 
 %  Inputs
 %
-%   particles:  An array of particles in Kilfoil format
-%   firstFrame: First frame to extract
-%   nFrames: Total number of frames to extrract.
+%   features:  A cell array of features found in each movie frame in Kilfoil format
 %
 %   Outputs
 %
@@ -18,13 +16,16 @@ function [ out ] = Kilfoil_to_uTrack_particles(particles, nFrames)
 %   yCoord: An array of y coordinates, one for each particle
 %   amp: An array of intensities, one for each particle
 
+    nFrames = length(features);
     out(nFrames,1) = struct('xCoord',[],'yCoord',[],'amp',[]);
     for frm = 1:nFrames
-        tmp = particles(particles(:,5) == frm,:);
-        sz = size(tmp,1);
-        out(frm,1).xCoord = [tmp(:,1) zeros(sz,1)];
-        out(frm,1).yCoord = [tmp(:,2) zeros(sz,1)];
-        out(frm,1).amp = [tmp(:,4) zeros(sz,1)];
+        p = features{frm};
+        if ~isempty(p)
+            sz = size(p,1);
+            out(frm,1).xCoord = [p(:,1) zeros(sz,1)];
+            out(frm,1).yCoord = [p(:,2) zeros(sz,1)];
+            out(frm,1).amp = [p(:,4) zeros(sz,1)];
+        end
     end
 end
 

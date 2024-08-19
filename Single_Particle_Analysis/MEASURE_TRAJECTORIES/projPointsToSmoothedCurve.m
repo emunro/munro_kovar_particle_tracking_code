@@ -45,16 +45,21 @@ function [segmentIndex, arcLengthOnSegment, arcLengthOnPath] = projPointsToSmoot
     arcLengthOnSegment = zeros(1,nPoints);
     arcLengthOnPath = zeros(1,nPoints);
 
-    seg = 1;
-    P1 = smoothedPath(:,1);
-    P2 = smoothedPath(:,2);
-
+    
     % loop through all points along trajectory
     for i = 1:nPoints
         
         % project current raw point onto current trajectory segment
         P = path(:,i);
+        seg = i;
+        if i == nPoints
+            seg = nPoints-1;
+        end
+        P1 = smoothedPath(:,seg);
+        P2 = smoothedPath(:,seg+1);
+                
         [alpha,dS] = projPointToLine(P,P1,P2);
+
         
         if alpha < 0    % projected point before segment start; back up
             while seg > 1 & alpha < 0

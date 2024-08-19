@@ -1,4 +1,4 @@
-function  [] = makeKymograph(im,trk,golayWindow,pathWidth)
+function  kymograph = makeKymograph(im,trk,golayWindow,pathWidth)
 %makeKymograph Given a trajectory path through an image, straighten the
 %path and compute the corresponding kymograph and display it
 
@@ -17,16 +17,14 @@ function  [] = makeKymograph(im,trk,golayWindow,pathWidth)
 %
 %   golayWindow:    size of the window used to smooth trajectory 
 %
-%   pathWidth:          width of path along trajectory in whiich to sample
-%                       data 
+%   pathWidth:      width of path along trajectory in whiich to sample
+%                   data 
 
     sx = smoothdata(trk.x,'sgolay',golayWindow);
     sy = smoothdata(trk.y,'sgolay',golayWindow);
     smoothedTraj = vertcat(sx,sy);
     
     pixelList = pixelizePath(smoothedTraj,pathWidth);
-    kymograph = straightenPath(im(:,:,trk.first:trk.last),pixelList);
-    imshow(kymograph,[1 5000]);
-   
+    kymograph = straightenPath(im(:,:,trk.first:trk.last),pixelList);   
 end
 

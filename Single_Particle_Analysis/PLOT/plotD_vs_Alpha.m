@@ -1,12 +1,14 @@
-function [ handle ] = plotD_vs_Alpha(tracks,tauMax, minTrackLength,movieInfo)
+function plotD_vs_Alpha(axes, trks,maxTau, movieInfo,plotMode)
 % Given a set of input tracks, estimates diffusivities and exponent alpha for 
 % MSD vs time and plots their distributions.
 
 
 % Inputs:
 
-% tracks = a list of particle tracks which is assumed to be in the format 
-% output by the function uTrackToSimpleTraj:
+%    axes  = the axes on which to plot
+
+%   tracks = a list of particle tracks which is assumed to be in the format 
+%   output by the function uTrackToSimpleTraj:
 %
 %   'first' =   the first movie frame in which this track appears
 %   'last' =    the last movie frame in which this track appears.
@@ -25,36 +27,78 @@ function [ handle ] = plotD_vs_Alpha(tracks,tauMax, minTrackLength,movieInfo)
 %     
 %     baseName:       original datafile name minus the ".tif" ext
 %     frameRate:      in #/sec
-%     pixelSize:      in µm
+%     pixelSize:      in Âµm
 %     firstFrame      first frame of movie segment 
 %     lastFrame:      last frame of movie segment 
 %     APOrientation:  0 if anterior is to the left; 1 if it is to the right 
-% 
-% Output:
-
-% handle = a graphics handle for the plot.
-
-trks = tracks([tracks.lifetime]>minTrackLength);
-numTracks = size(trks,2);
-D = zeros(numTracks,1);
-Alpha = zeros(numTracks,1);
+%
+% plotMode = 'selected', 'all' or 'mean/pooled'
 
 
-for i=1:numTracks  
-    [d a] = getDAlpha(trks(i),tauMax,movieInfo);
-    D(i) = d;
-    Alpha(i) = a;
-end
 
-figure
-scatter(Alpha,D);
-title('D vs alpha');
-ylabel('D');
-xlabel('alpha');
+    switch plotMode
 
+        case 'selected'
 
-fprintf('the number of tracks longer than %d seconds is: %d.\n',minTrackLength/movieInfo.frameRate,numTracks);
+            trks = trks([trks.lifetime] > maxTau);
+            [D Alpha] = getDAlpha(trks,maxTau,movieInfo);
+            scatter(axes,Alpha,D);
+            title(axes,'D vs alpha');
+            ylabel(axes,'D');
+            xlabel(axes,'alpha');
+            xlim(axes,[0 2]);
+            ylim(axes,[0 0.5]);
 
-handle = gcf;
+         case {'all','mean/pooled'}
+            
+            % determine number of samples and parameter values
+            numSamples = size(trks,1);
+            numParameters = size(trks,2);
+
+            % compute D and Alpha
+            D = cell(numSamples,numParameters);
+            Alpha = cell(numSamples,numParameters);
+
+            for i = 1:numSamples           
+                for  j = 1:numParameters 
+                    ltrks = trks{i,j};
+                    ltrks = ltrks([ltrks.lifetime] > maxTau);
+                    [D{i,j} Alpha{i,j}] = getDAlpha(ltrks,maxTau,movieInfo);
+                end
+            end
+
+            if isequal(plotMode,'all')
+
+                % plot
+                for i = 1:numSamples
+                    for j = 1:numParameters
+                        scatter(axes{i,j},Alpha{i,j},D{i,j});
+                        ylabel(axes{i,j},'D');
+                        xlabel(axes{i,j},'alpha');
+                        xlim(axes{i,j},[0 2]);
+                        ylim(axes{i,j},[0 0.5]);
+                        if numParameters > 1
+                            title(axes{i,j},['sample ' num2str(i) ', ' info.parameterToVary ' = ' num2str(info.parameterValues(j))]);
+                        end
+                    end
+                end
+            else   % plot mean/pooled
+
+                % plot
+                for j = 1:numParameters                          
+                    hold(axes{j},'on');
+                    for i = 1:numSamples
+                        scatter(axes{j},Alpha{i,j},D{i,j});
+                    end
+                    ylabel(axes{j},'D');
+                    xlabel(axes{j},'alpha');
+                    xlim(axes{j},[0 2]);
+                    ylim(axes{j},[0 0.5]);
+                    if numParameters > 1
+                        title(axes{i,j},['sample ' num2str(i) ', ' info.parameterToVary ' = ' num2str(info.parameterValues(j))]);
+                    end
+                end
+            end
+    end
 end
 

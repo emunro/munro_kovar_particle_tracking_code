@@ -1,10 +1,10 @@
-function slopes = plotSpeedHistogram(trks,movieInfo, sgolay)
+function  plotSpeedHistogram(axes,trks,info, sgWindowSize,plotMode)
 % Compute msd vs tau for tau < maxTau
 
 % Inputs:
 
-% trks = an array of particle tracks in simple format
-%
+%    axes  = the axes on which to plot
+
 %   'first' =   the first movie frame in which this track appears
 %   'last' =    the last movie frame in which this track appears.
 %   'lifetime' = the length of the track in frames.
@@ -17,27 +17,85 @@ function slopes = plotSpeedHistogram(trks,movieInfo, sgolay)
 %     
 %     baseName:       original datafile name minus the ".tif" ext
 %     frameRate:      in #/sec
-%     pixelSize:      in µm
+%     pixelSize:      in Âµm
 %     firstFrame      first frame of movie segment 
 %     lastFrame:      last frame of movie segment 
-%     APOrientation:  0 if anterior is to the left; 1 if it is to the right 
+%
+% plotMode = 'selected', 'all' or 'mean/pooled'
+
+% minTrackLength = minimum length of particle track in frames to include in
+% the analysis.
 
 
-% 
-% Output
+% sgWindowSize = width of the Savitzky-Golay smoothing window
 
-% speeds    array of speeds
 
-    numTracks = size(trks,2)
-    speeds = zeros(numTracks,1);
+    switch plotMode
 
-    for i=1:numTracks  
-        speeds(i) = getSpeed(trks(i),movieInfo,sgolay);
+        case 'selected'
+
+            % compute speeds
+            speeds = getSpeeds(trks,info,sgWindowSize);
+            maxSpeed = max(speeds);
+
+            % plot speeds
+            binwidth = maxSpeed/30;
+            histogram(axes,speeds,'BinWidth',binwidth,'Normalization','probability');
+            xlim(axes,[0,maxSpeed]);
+            ylim(axes,[0 0.3]);
+            xlabel(axes, 'speed');
+            ylabel(axes, 'frequency');
+           
+        case {'all','mean/pooled'}
+            
+            % determine number of samples and paramjeter values
+            numSamples = size(trks,1);
+            numParameters = size(trks,2);
+
+            % allocate storage for msds.
+            speeds = cell(numSamples,numParameters);
+        
+            % compute speeds and max speeds
+            maxSpeed = 0;
+            for i = 1:numSamples                
+                for  j = 1:numParameters 
+                    speeds{i,j} = getSpeeds(trks{i,j},info,sgWindowSize);
+                    maxSpeed = max(maxSpeed,max(speeds{i,j}));
+                end
+            end
+
+            binwidth = maxSpeed/30;
+ 
+            if isequal(plotMode,'all')
+                for i = 1:numSamples
+                    for j = 1:numParameters     
+
+                        % plot speeds                      
+                        histogram(axes{i,j},speeds{i,j},'BinWidth',binwidth,'Normalization','probability');
+                        xlim(axes{i,j},[0,maxSpeed]);
+                        ylim(axes{i,j},[0 0.3]);
+                        xlabel(axes{i,j}, 'speed');
+                        ylabel(axes{i,j}, 'frequency');                        
+                    end
+                end
+            else   % plot mean/pooled
+
+                for j = 1:numParameters    
+
+                    allSpeeds = [];
+                    for i = 1:numSamples
+                        allSpeeds = vertcat(allSpeeds,speeds{i,j});
+                    end
+
+                    % plot speeds                      
+                    histogram(axes{j},allSpeeds,'BinWidth',binwidth,'Normalization','probability');
+                    xlim(axes{j},[0,maxSpeed]);
+                    ylim(axes{j},[0 0.3]);
+                    xlabel(axes{j}, 'speed');
+                    ylabel(axes{j}, 'frequency');                        
+                end
+            end
     end
-
-    figure; hold;
-    binwidth = max(speeds/30);
-    histogram(speeds,'BinWidth',binwidth,'Normalization','probability');
 
 end
 

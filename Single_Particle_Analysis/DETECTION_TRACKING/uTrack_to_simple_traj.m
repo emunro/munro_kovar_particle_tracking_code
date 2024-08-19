@@ -38,8 +38,12 @@ function [out] = uTrack_to_simple_Traj(tracks, firstFrame,lastFrame,movieInfo,in
 cTrks = [];
 if includeCompoundTracks
     cTrks = getSimpleTrajFromCompoundTracks(tracks,movieInfo);
+    if ~isempty(cTrks)
+        cTrks = cTrks([cTrks.lifetime]>1);
+    end
 end
 tracks = removeCmpdTrks(tracks);
+
 numTracks = size(tracks,1);
 trkLengths = trkLength(tracks);
 sTrks(numTracks) = struct('first',0,'last',0,'lifetime',0,'x',0,'y',0,'I',0,'origin','unknown','fate','unknown');
@@ -57,14 +61,15 @@ for trk=1:numTracks
         y(j)=coords(1,8*j-6);
         I(j) = coords(1,8*j-4);
     end
-          
+
     sTrks(trk).first = firstFrame + events(1,1) - 1;
     sTrks(trk).last = firstFrame + events(2,1) - 1;
     sTrks(trk).lifetime = trkLengths(trk);
     sTrks(trk).x = naninterp(x);
     sTrks(trk).y = naninterp(y);
-    sTrks(trk).I = naninterp(I);
-    if sTrks(trk).first > firstFrame 
+    sTrks(trk).I = I;
+%     sTrks(trk).I = naninterp(I);
+   if sTrks(trk).first > firstFrame 
         sTrks(trk).origin = 'birth';
     else 
         sTrks(trk).origin = 'unknown';

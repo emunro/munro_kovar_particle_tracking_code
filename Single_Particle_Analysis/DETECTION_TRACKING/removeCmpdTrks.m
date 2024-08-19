@@ -1,10 +1,10 @@
 function [tracks] = removeCmpdTrks(trks)
 
-%Purpose: remove the compound tracks from a list of trajectories in µTrack format,
+%Purpose: remove the compound tracks from a list of trajectories in ÂµTrack format,
 
 
 
-%Input : tracksFinal structure produced by µTrack's ScriptTrackGeneral.m
+%Input : tracksFinal structure produced by ÂµTrack's ScriptTrackGeneral.m
 %Ouput : subset of tracksFinal structure containing only simple tracks
 
 numtrks = size(trks,1);

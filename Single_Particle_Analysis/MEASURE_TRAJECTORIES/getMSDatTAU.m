@@ -18,14 +18,15 @@ function msd = getMSDatTAU(trks,tau,movieInfo)
 % movieInfo         =   a struct containing the following fields:
 %     
 %     frameRate:      in #/sec
-%     pixelSize:      in µm
+%     pixelSize:      in Âµm
 
 % Output
 
 % msd           an array containing maximum values (for each track) of msd at lag time
 %                       tau
 
-
+    trks = trks([trks.lifetime]>tau);
+%     trks = trks([trks.lifetime]== tau+1);
     msd = zeros(1,length(trks));
     for i = 1:length(trks)
         trk = trks(i);
@@ -39,6 +40,24 @@ function msd = getMSDatTAU(trks,tau,movieInfo)
             msd(i) = msd(i)*movieInfo.pixelSize*movieInfo.pixelSize;
         end
     end
+%     
+%     trks = trks([trks.lifetime]>tau);
+%     msd = zeros(1,length(trks));
+%     for i = 1:length(trks)
+%         trk = trks(i);
+% 
+%         lifetime = min(3,trk.lifetime);
+% 
+%         if tau < lifetime
+%             N=lifetime-tau;
+%             dx = trk.x(tau+1:tau+N)-trk.x(1:N);
+%             dy = trk.y(tau+1:tau+N)-trk.y(1:N);
+%             dx = dx(~isnan(dx));
+%             dy = dy(~isnan(dy));
+%             msd(i) = mean(dx.*dx + dy.*dy);
+%             msd(i) = msd(i)*movieInfo.pixelSize*movieInfo.pixelSize;
+%         end
+%     end
 end
 
 

@@ -1,10 +1,10 @@
 function [tracks] = extractCmpdTrks(trks)
 
-%Extract the compound tracks from a list of trajectories in µTrack format.
+%Extract the compound tracks from a list of trajectories in ÂµTrack format.
 %These are the tracks that include merge and split events.
 
 
-%Input : tracksFinal structure produced by µTrack's ScriptTrackGeneral.m
+%Input : tracksFinal structure produced by ÂµTrack's ScriptTrackGeneral.m
 
 %Ouput : subset of tracksFinal structure containing only the compound tracks
 

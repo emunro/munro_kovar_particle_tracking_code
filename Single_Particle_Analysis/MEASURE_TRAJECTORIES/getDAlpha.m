@@ -1,10 +1,10 @@
-function [D,alpha] = getDAlpha(trk,maxTau,movieInfo)
+function [D,Alpha] = getDAlpha(trks,maxTau,movieInfo)
 % Compute msd vs tau for tau < maxTau, and then fit to msd = 4Dt^alpha to
 % estimate D and alpha
 
 % Inputs:
 
-% trk = a particle track in simple format
+% trks = an array of particle tracks in simple format
 %
 %   'first' =   the first movie frame in which this track appears
 %   'last' =    the last movie frame in which this track appears.
@@ -20,7 +20,7 @@ function [D,alpha] = getDAlpha(trk,maxTau,movieInfo)
 %     
 %     baseName:       original datafile name minus the ".tif" ext
 %     frameRate:      in #/sec
-%     pixelSize:      in µm
+%     pixelSize:      in Âµm
 %     firstFrame      first frame of movie segment 
 %     lastFrame:      last frame of movie segment 
 %     APOrientation:  0 if anterior is to the left; 1 if it is to the right 
@@ -29,11 +29,17 @@ function [D,alpha] = getDAlpha(trk,maxTau,movieInfo)
 
 % subtracks          D,alpha
 
-    msd = getMSDvsTAU(trk,maxTau,movieInfo);
-    X=1:maxTau;
-    temp=polyfit(log(X/movieInfo.frameRate),log(msd*movieInfo.pixelSize*movieInfo.pixelSize),1);
-    alpha= temp(1);
-    D=exp(temp(2))/4;
+    numTracks = size(trks,2);   
+    D = zeros(numTracks,1);
+    Alpha = zeros(numTracks,1);
+
+    for i = 1:numTracks
+        msd = getMSDvsTAU(trks(i),maxTau,movieInfo);
+        X=1:maxTau;
+        temp=polyfit(log(X/movieInfo.frameRate),log(msd),1);
+        Alpha(i) = temp(1);
+        D(i) = exp(temp(2))/4;
+    end
 
 end
 

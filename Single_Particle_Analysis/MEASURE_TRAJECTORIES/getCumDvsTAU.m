@@ -1,5 +1,5 @@
 function cumD = getCumDvsTAU(trk,movieInfo,sgWindowWidth)
-% getCumDvsTAU   Takes a trajectory in simple format, and computes cumulative distances ion physical units (µm) along 
+% getCumDvsTAU   Takes a trajectory in simple format, and computes cumulative distances ion physical units (Âµm) along 
 % smoothed version of that trajectory.
 
 % Inputs:
@@ -17,7 +17,7 @@ function cumD = getCumDvsTAU(trk,movieInfo,sgWindowWidth)
 % movieInfo         =   a struct containing the following fields:
 %     
 %     frameRate:      in #/sec
-%     pixelSize:      in µm
+%     pixelSize:      in Âµm
 
 % sgWindowWidth      size of the smoothing window used by the SavitskyGolay filter
 % 
